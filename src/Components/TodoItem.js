@@ -4,10 +4,11 @@ import '../styles/TodoItem.css';
 
 class TodoItem extends React.Component {
     render(){
+        const {data} = this.props;
         return(
             <div className="todo-items">
                 <div className="title-item">
-                    <p>Title task</p>
+                <p>{data.title}</p>
                 </div>
                 <div className="button-group">
                     <Button label="Edit" variant="success"/>

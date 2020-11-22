@@ -4,8 +4,48 @@ import './App.css';
 
 import TodoItem from './Components/TodoItem';
 import FormInput from './Components/FormInput';
+import Modal from './Components/Modal';
 
 class App extends React.Component {
+  state = {
+    todos: [
+      {
+        id: 1,
+        title: "Reading book"
+      },
+      {
+        id: 2,
+        title: "Watch Tv"
+      }
+    ],
+    isModal: false,
+    isEdit: false,
+    isDelete: false
+  }
+
+  openModal = () => {
+    this.setState({
+      isModal: true
+    })
+  }
+
+  closeModal = () => {
+    this.setState({
+      isModal: false
+    })
+  }
+
+  addTask = (text) => {
+      const newId = this.state.todos.length;
+      this.setState({
+        todos:[
+            ...this.state.todos,
+            {id: newId+1,
+             title: text 
+            }
+        ]
+      })    
+  }
   render(){
     return (
       <div className="app">
@@ -14,11 +54,17 @@ class App extends React.Component {
           <h4>Task List</h4>
         </div>
         <div className="list">
-          <TodoItem/>
+          {this.state.todos.map(item=>
+            <TodoItem key={item.id} 
+              data={item}
+              />
+          )}
         </div>
         <div className="input-form">
-          <FormInput/>
+          <FormInput
+            add={this.addTask}/>
         </div>
+        <Modal/>
       </div>
     );
   }
