@@ -19,19 +19,49 @@ class App extends React.Component {
       }
     ],
     isModal: false,
-    isEdit: false,
-    isDelete: false
+    status: "",
+    editData: {
+      id: "",
+      title: ""
+    }
   }
 
-  openModal = () => {
+  openModal = (status,data) => {
     this.setState({
-      isModal: true
+      isModal: true,
+      status: status,
+      editData: data
     })
   }
 
   closeModal = () => {
     this.setState({
       isModal: false
+    })
+  }
+
+  setTitle = e => {
+    this.setState({
+      editData: {
+        ...this.state.editData,
+        title: e.target.value
+      }
+    })
+  }
+
+  updateTitle = () => {
+    const {id,title} = this.state.editData;
+    const newData = {id,title};
+    const newTodos = this.state.todos;
+    newTodos.splice(id-1,1,newData);
+    this.setState({
+      todos: newTodos,
+      editData: {
+        id: "",
+        title: ""
+      },
+      isModal: false,
+      status: ""
     })
   }
 
@@ -46,6 +76,19 @@ class App extends React.Component {
         ]
       })    
   }
+
+  deleteTask = id => {
+    this.setState({
+      todos: this.state.todos.filter(item => item.id !== id),
+      editData: {
+        id: "",
+        title: ""
+      },
+      isModal: false,
+      status: ""
+    })
+  }
+
   render(){
     return (
       <div className="app">
@@ -57,6 +100,7 @@ class App extends React.Component {
           {this.state.todos.map(item=>
             <TodoItem key={item.id} 
               data={item}
+              open={this.openModal}
               />
           )}
         </div>
@@ -64,7 +108,14 @@ class App extends React.Component {
           <FormInput
             add={this.addTask}/>
         </div>
-        <Modal/>
+        { this.state.isModal && 
+          <Modal status={this.state.status}
+            data={this.state.editData}
+            close={this.closeModal}
+            setval={this.setTitle}
+            fupdate={this.updateTitle}
+            fdelete={this.deleteTask}/>
+        }
       </div>
     );
   }
